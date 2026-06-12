@@ -52,9 +52,9 @@ const CONFIG = {
   // 水印文字配置 (Watermark Text)
   // ============================================
   // 首页标题栏背景滚动水印文字（大字循环动画）
-  ENDSPACE_BANNER_WATERMARK_TEXT: 'CLOUD09_SPACE',
+  ENDSPACE_BANNER_WATERMARK_TEXT: 'CHASEN_VIBING',
   // 文章详情页右上角水印文字
-  ENDSPACE_ARTICLE_WATERMARK_TEXT: 'CLOUD09',
+  ENDSPACE_ARTICLE_WATERMARK_TEXT: 'CHASEN',
 
   // ============================================
   // 菜单配置 (Menu)

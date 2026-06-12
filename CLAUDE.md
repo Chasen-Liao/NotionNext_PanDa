@@ -10,9 +10,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 上游仓库：[notionnext-org/NotionNext](https://github.com/notionnext-org/NotionNext)
 - 本仓库：[Chasen-Liao/NotionNext_PanDa](https://github.com/Chasen-Liao/NotionNext_PanDa)
 - Vercel 项目名：`notion-next-pan-da`（`leno0zs-projects` team）
-- 生产域名：[pandacodingvlog.vercel.app](https://pandacodingvlog.vercel.app)
+- 生产域名：[https://chasenclog.vercel.app/](https://chasenclog.vercel.app/)
 - Notion 数据库：**Chasen_Clog**（ID: `11c0312be533807f926acbe65b5bcf3b`，在 `.env.local` 中配置）
-- 当前主题：`heo`（通过 `NEXT_PUBLIC_THEME` 环境变量设置）
+- 当前主题：`endspace`（通过 `NEXT_PUBLIC_THEME` 环境变量设置）
 - 评论系统：Cusdis（通过 `NEXT_PUBLIC_COMMENT_CUSDIS_APP_ID` 环境变量设置）
 - Node 版本要求：`>=20 <25`
 
@@ -60,6 +60,7 @@ npm run dev          # 启动本地开发服务器
 # 构建与部署
 npm run build        # 生产构建
 npm run export       # 静态导出
+npm run export       # 直接部署到 Vercel（本地推送到 Vercel）
 npx vercel --prod    # 部署到 Vercel 生产环境（需先登录 Vercel CLI）
 
 # 代码质量
@@ -71,20 +72,6 @@ npm run type-check   # TypeScript 类型检查
 npm run test         # Jest 测试
 npm run test:coverage
 ```
-
-## 查询代码库
-
-使用 **Codegraph** 查询代码符号、调用关系和数据流：
-
-| 场景 | 工具 |
-|------|------|
-| 查函数定义、模块结构 | `codegraph_explore` |
-| 查符号位置 | `codegraph_search` |
-| 查谁调用了某个函数 | `codegraph_callers` |
-| 查函数调用了哪些东西 | `codegraph_callees` |
-| 查修改影响范围 | `codegraph_impact` |
-
-Codegraph 索引已在 `.codegraph/` 中，所有查询都是亚毫秒级的。查找代码时优先用 Codegraph，再配合 Read 看细节。
 
 ## 与上游同步
 
