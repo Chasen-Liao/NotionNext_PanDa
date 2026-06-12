@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "vercel@claude-plugins-official": true,
+    "notion@claude-plugins-official": true
+  }
+}
