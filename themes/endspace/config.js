@@ -36,7 +36,7 @@ const CONFIG = {
   ENDSPACE_LOADING_COVER: true, // 是否显示加载动画
   
   // 加载动画显示的站点名称 (右侧竖排大字)
-  ENDSPACE_LOADING_SITE_NAME: 'CLOUD09_SPACE', // 站点名称，显示在加载动画右侧
+  ENDSPACE_LOADING_SITE_NAME: 'CHASEN_CLOG', // 站点名称，显示在加载动画右侧
   
   // 加载进度文字 (不同阶段)
   ENDSPACE_LOADING_TEXT_INIT: 'INITIALIZING', // 初始化阶段显示的文字
