@@ -3,6 +3,7 @@ import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  generateText,
   streamText,
   toUIMessageStream,
   type UIMessage
@@ -58,7 +59,7 @@ const SYSTEM_PROMPT = `你是 NotionNext 文档助手。
 - /user-guide/themes/THEMES_CATALOG
 - /user-guide/reference/features
 - /user-guide/comments/overview
-- /user-guide/deploy/cloudflare-pages-docs`
+- /user-guide/deploy/cloudflare-pages`
 
 const json = (body: unknown, init: ResponseInit = {}) =>
   new Response(JSON.stringify(body), {
@@ -96,12 +97,30 @@ const maxOutputTokens = (value: string | undefined) => {
 }
 
 const textFromMessage = (message?: UIMessage) =>
-  message.parts
+  message?.parts
     ?.map(part => (part.type === 'text' ? part.text : ''))
     .join('') || ''
 
 const lastUserText = (messages: UIMessage[]) =>
   textFromMessage([...messages].reverse().find(message => message.role === 'user'))
+
+const errorMessage = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error)
+
+  if (/api key|permission|auth|credential/i.test(message)) {
+    return 'AI model authentication failed.'
+  }
+
+  if (/quota|rate limit|429/i.test(message)) {
+    return 'AI model quota or rate limit reached.'
+  }
+
+  if (/timeout|abort|network|fetch/i.test(message)) {
+    return 'AI model network request failed.'
+  }
+
+  return 'AI assistant request failed.'
+}
 
 export const onRequestOptions = ({ request, env }: PagesContext) =>
   new Response(null, {
@@ -112,6 +131,7 @@ export const onRequestOptions = ({ request, env }: PagesContext) =>
 export const onRequestPost = async ({ request, env }: PagesContext) => {
   const headers = corsHeaders(request, env)
   const contentLength = Number(request.headers.get('content-length') || 0)
+  const shouldStream = new URL(request.url).searchParams.get('stream') !== 'false'
 
   if (contentLength > MAX_REQUEST_BYTES) {
     return json({ error: 'Request is too large.' }, { status: 413, headers })
@@ -132,6 +152,24 @@ export const onRequestPost = async ({ request, env }: PagesContext) => {
   }
 
   const google = createGoogle({ apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY })
+
+  if (!shouldStream) {
+    try {
+      const result = await generateText({
+        model: google(env.DOCS_CHAT_MODEL || DEFAULT_MODEL),
+        messages: await convertToModelMessages(messages),
+        system: SYSTEM_PROMPT,
+        temperature: 0,
+        maxOutputTokens: maxOutputTokens(env.DOCS_CHAT_MAX_TOKENS)
+      })
+
+      return json({ text: result.text }, { headers })
+    } catch (error) {
+      console.error(error)
+      return json({ error: errorMessage(error) }, { status: 502, headers })
+    }
+  }
+
   const result = streamText({
     model: google(env.DOCS_CHAT_MODEL || DEFAULT_MODEL),
     messages: await convertToModelMessages(messages),
@@ -146,7 +184,7 @@ export const onRequestPost = async ({ request, env }: PagesContext) => {
     },
     onError: error => {
       console.error(error)
-      return 'AI assistant request failed.'
+      return errorMessage(error)
     }
   })
 
