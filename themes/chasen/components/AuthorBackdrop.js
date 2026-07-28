@@ -220,7 +220,7 @@ export default function AuthorBackdrop({
       resizeObserver?.disconnect()
       if (frameId) window.cancelAnimationFrame(frameId)
     }
-  }, [])
+  }, [pathname])
 
   if (!isAuthorBackdropRoute(pathname)) return null
 

@@ -1,10 +1,12 @@
 import {
+  default as AuthorBackdrop,
   AuthorIntro,
   buildAuthorBackdropMeta,
   formatAuthorBackdropDate,
   isShortAuthorBackdropPage,
   isAuthorBackdropRoute
 } from '@/themes/chasen/components/AuthorBackdrop'
+import { act, render } from '@testing-library/react'
 import { renderToStaticMarkup } from 'react-dom/server.node'
 
 describe('Chasen author backdrop', () => {
@@ -58,5 +60,26 @@ describe('Chasen author backdrop', () => {
     expect(
       isShortAuthorBackdropPage({ documentHeight: 1900, viewportHeight: 1243 })
     ).toBe(false)
+  })
+
+  it('restores the visible backdrop after returning from an article', () => {
+    jest.useFakeTimers()
+    const { container, rerender } = render(<AuthorBackdrop pathname='/' />)
+
+    act(() => {
+      jest.runOnlyPendingTimers()
+    })
+    expect(container.querySelector('.tl-author-backdrop')).toHaveClass('is-ready')
+
+    rerender(<AuthorBackdrop pathname='/article/[slug]' />)
+    expect(container.querySelector('.tl-author-backdrop')).not.toBeInTheDocument()
+
+    rerender(<AuthorBackdrop pathname='/' />)
+    act(() => {
+      jest.runOnlyPendingTimers()
+    })
+
+    expect(container.querySelector('.tl-author-backdrop')).toHaveClass('is-ready')
+    jest.useRealTimers()
   })
 })
