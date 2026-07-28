@@ -27,4 +27,20 @@ describe('chasen visual system', () => {
       accent: '#60a5fa'
     })
   })
+
+  it('centers each timeline marker on its vertical rail', () => {
+    const css = Style().props.children
+    const rail = css.match(/\.tl-timeline-rail::before\s*\{([^}]+)\}/)?.[1]
+    const marker = css.match(/\.tl-timeline-item::before\s*\{([^}]+)\}/)?.[1]
+    const readRem = (css, property) =>
+      Number(css.match(new RegExp(`${property}:\\s*(-?[\\d.]+)rem`))?.[1])
+    const readPx = (css, property) =>
+      Number(css.match(new RegExp(`${property}:\\s*([\\d.]+)px`))?.[1])
+
+    const railCenter = readRem(rail, 'left') * 16 + readPx(rail, 'width') / 2
+    const markerCenter =
+      readRem(marker, 'left') * 16 + 1.25 * 16 + readPx(marker, 'width') / 2
+
+    expect(markerCenter).toBeCloseTo(railCenter, 6)
+  })
 })

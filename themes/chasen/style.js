@@ -504,16 +504,16 @@ const Style = () => {
         border-radius: var(--tl-radius);
         background: transparent;
         transition:
-          background-color 180ms ease,
-          border-color 180ms ease,
-          box-shadow 180ms ease,
-          transform 180ms ease;
+          background-color 160ms ease,
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       #theme-thoughtlite .tl-timeline-item::before {
         position: absolute;
         top: 1.15rem;
-        left: -1.55rem;
+        left: -1.15rem;
         width: 9px;
         height: 9px;
         border: 2px solid var(--tl-accent);
@@ -521,20 +521,22 @@ const Style = () => {
         background: var(--tl-bg);
         content: '';
         transition:
-          background-color 180ms ease,
-          transform 180ms ease;
+          background-color 160ms ease,
+          transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
       }
 
-      #theme-thoughtlite .tl-timeline-item:hover {
-        background: var(--tl-surface);
-        border-color: var(--tl-border);
-        box-shadow: var(--tl-shadow-hover);
-        transform: translateX(2px);
-      }
+      @media (hover: hover) and (pointer: fine) {
+        #theme-thoughtlite .tl-timeline-item:hover {
+          background: var(--tl-surface);
+          border-color: var(--tl-border);
+          box-shadow: var(--tl-shadow-hover);
+          transform: translateX(2px);
+        }
 
-      #theme-thoughtlite .tl-timeline-item:hover::before {
-        background: var(--tl-accent);
-        transform: scale(1.08);
+        #theme-thoughtlite .tl-timeline-item:hover::before {
+          background: var(--tl-accent);
+          transform: scale(1.08);
+        }
       }
 
       #theme-thoughtlite .tl-card {
